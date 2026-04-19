@@ -100,3 +100,105 @@ Expected output:
 ```bash id="7n2lwd"
 tools  pdk
 ```
+## Ngspice Installation
+Ngspice is an open-source SPICE simulator used for analog and mixed-signal circuit analysis. It supports transient, AC, DC, and noise simulations and integrates seamlessly with Xschem for schematic-driven simulation.
+### Clone Ngspice Repository
+
+```bash id="k2d9pl"
+cd ~/eda/tools
+git clone https://git.code.sf.net/p/ngspice/ngspice ngspice
+```
+
+---
+
+### Verify Clone
+
+```bash id="m8xq2n"
+ls ~/eda/tools
+```
+
+Expected output:
+
+```bash id="z7c1vo"
+ngspice
+```
+
+---
+
+### Prepare Build (Autogen + Build Directory)
+
+```bash id="t9w4bc"
+cd ~/eda/tools/ngspice
+./autogen.sh
+
+mkdir release
+cd release
+```
+
+---
+
+### What this step does
+
+* **autogen.sh** → Generates configuration scripts required for compilation
+* **release/** → Keeps build files separate from source (clean workflow)
+### Fix Common Error: libtool Missing
+
+### Problem
+
+While running:
+
+```bash id="h3k9df"
+./autogen.sh
+```
+
+You may see this error:
+
+```bash id="k29s8a"
+You must have libtool installed to compile ngspice.
+```
+
+---
+
+### Why this happens
+
+Ngspice uses the **GNU build system**, which depends on `libtool` to:
+
+* Manage shared libraries
+* Generate proper build configuration files
+* Complete the `autogen.sh` process
+
+---
+
+### Solution
+
+Install the missing dependency:
+
+```bash id="w7p2sl"
+sudo apt install -y libtool
+```
+
+---
+
+### Important (Do this after installing)
+
+You **must re-run autogen**, otherwise the build will still fail.
+
+```bash id="x91mqp"
+cd ~/eda/tools/ngspice
+./autogen.sh
+```
+
+---
+
+### Expected Result
+
+* No “libtool missing” error
+* Autogen completes successfully
+
+---
+
+### Note
+
+This is a **common issue**, especially on fresh Linux installations.
+It does not mean anything is broken—just a missing dependency.
+
