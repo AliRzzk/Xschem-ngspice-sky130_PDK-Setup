@@ -681,3 +681,241 @@ xschem
 ```
 ![Xschem GUI](Xschem_GUI.png)
 Expected: Xschem GUI opens
+---
+
+# Sky130 PDK Setup
+
+Now we prepare a clean location for the Sky130 PDK.
+
+---
+
+### Create PDK Directory
+
+```bash id="n8p2kx"
+mkdir -p ~/eda/pdk/sky130
+```
+
+### Directory Location
+
+```bash id="v3q7ld"
+~/eda/pdk/sky130/
+```
+
+### Verify Directory
+
+```bash id="k4z9mc"
+ls ~/eda/pdk
+```
+
+Expected output:
+
+```bash id="p7m1ws"
+sky130
+```
+
+## Create .spiceinit File
+
+You need to create the following .spiceinit file in the directory where simulations are run (typically ~/.xschem/simulations) or in your home directory. This file sets some default behavior for reading .lib files and speeds up loading pdk model files.
+
+---
+
+### Create the file
+
+```bash id="k2m9xp"
+nano ~/.spiceinit
+```
+
+---
+
+### Add these lines
+
+```bash id="p8d4vs"
+set ngbehavior=hsa
+set ng_nomodcheck
+```
+
+---
+
+### Save and exit
+
+* Press `CTRL + O` → Enter
+* Press `CTRL + X`
+
+---
+
+### Why this is needed
+
+* Improves compatibility with Sky130 models
+* Avoids model checking errors
+* Speeds up simulation loading
+
+  
+---
+
+## Clone Open_PDKs (Sky130 Base)
+
+Now we download the official Open_PDKs repository, which is required to build the Sky130 PDK.
+
+---
+
+### Clone Repository
+
+```bash id="v4k8qp"
+cd ~/eda/pdk
+git clone git://opencircuitdesign.com/open_pdks
+```
+
+---
+
+### What this step does
+
+* Downloads Open_PDKs source
+* Creates directory:
+
+```bash id="n7p3dx"
+~/eda/pdk/open_pdks/
+```
+
+---
+
+### Verify Clone
+
+```bash id="m2x9zs"
+ls ~/eda/pdk/open_pdks
+```
+
+Expected output (example):
+
+```bash id="q8r1tv"
+common  configure  sky130  scripts  Makefile.in
+```
+
+---
+### Configure Open_PDKs (Sky130 Only)
+
+Now configure the build to install only the Sky130 PDK.
+
+---
+
+### Go to correct directory
+
+```bash
+cd ~/eda/pdk/open_pdks
+```
+
+---
+
+### Choose which PDK to install
+
+The `./configure` script allows you to select specific PDKs:
+
+* **Sky130 only:**
+
+```bash
+--enable-sky130-pdk
+```
+
+* **GF180MCU only:**
+
+```bash
+--enable-gf180mcu-pdk
+```
+
+* **Both:**
+
+```bash
+--enable-sky130-pdk --enable-gf180mcu-pdk
+```
+
+---
+
+### Run configuration (Sky130 only)
+
+```bash
+cd ~/eda/pdk/open_pdks
+./configure \
+--enable-sky130-pdk \
+--prefix=$HOME/eda/pdk/sky130A
+```
+
+---
+
+### What this step does
+
+* Selects only **Sky130 PDK** (saves time & disk space)
+* Sets installation path:
+
+```bash
+~/eda/pdk/sky130A
+```
+
+---
+
+### Why these flags matter
+
+* **--enable-sky130-pdk** → builds only Sky130
+* **--prefix** → installs inside your workspace (clean setup)
+
+---
+
+### Build & Install Sky130 PDK
+
+Now we build and install the Sky130 PDK.
+
+---
+
+### Run Build (Important: correct directory)
+
+```bash id="n4k8ps"
+cd ~/eda/pdk/open_pdks
+make -j4
+```
+
+---
+
+### What this step does
+
+* Compiles Sky130 PDK files
+* Converts raw data into tool-compatible format
+* Prepares libraries for Ngspice, Xschem, Magic
+
+---
+
+### Time Estimate
+
+* **30–90 minutes** (depends on system)
+* Uses multiple CPU cores (`-j4`)
+
+---
+
+### Install PDK
+
+```bash id="v2p7dx"
+cd ~/eda/pdk/open_pdks
+make install
+```
+
+---
+
+### Installation Location
+
+```bash id="k9m3qt"
+~/eda/pdk/sky130A
+```
+
+---
+
+### Important Notes
+
+* Always run `make` and `make install` inside:
+
+```bash id="x7d1rf"
+~/eda/pdk/open_pdks
+```
+
+---
+
+### Summary
+
+* `open_pdks/` → build source
+* `sky130A/` → final usable PDK
