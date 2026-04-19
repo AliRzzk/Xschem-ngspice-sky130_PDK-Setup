@@ -346,3 +346,75 @@ Run this command:
 * Simulator is ready to use
 
 ---
+### Verify Correct Ngspice Binary (PATH Check)
+
+Even after successful installation, you must ensure the system is using the **correct Ngspice binary**.
+
+---
+
+### Run this command
+
+```bash id="p2k8sj"
+which ngspice
+```
+
+---
+
+### Expected Result
+
+```bash id="u9x4mn"
+/home/your-username/eda/tools/ngspice-install/bin/ngspice
+```
+
+---
+
+## Why this step is important
+
+Even if this works:
+
+```bash id="z1q7rt"
+ngspice -v
+```
+
+…it does **not guarantee** you are using your compiled version.
+
+---
+
+### What can go wrong
+
+* System may use **APT-installed Ngspice** (`/usr/bin/ngspice`)
+* Your compiled version may be ignored
+* This can cause:
+
+  * Feature mismatch (missing XSPICE, CIDER, etc.)
+  * Compatibility issues with Xschem
+  * Debugging confusion later
+
+---
+
+## What we are verifying
+
+We are checking:
+
+👉 **Which exact binary is being executed when you type `ngspice`**
+
+---
+
+### Goal
+
+Ensure:
+
+* System points to your custom build
+* Not the default system-installed version
+
+---
+
+## If output is wrong (important note)
+
+If you see something like:
+
+```bash id="l7c2vb"
+/usr/bin/ngspice
+```
+
+It means your system is **not using the correct version**.
