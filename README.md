@@ -51,7 +51,7 @@ circuits  layouts  models  simulations
 
 ---
 
-## Folder Purpose
+### Folder Purpose
 
 * **circuits/** → Store Xschem schematic files
 * **layouts/** → Store layout designs (Magic/KLayout)
@@ -86,4 +86,17 @@ mkdir -p ~/eda/pdk
 └── eda/
     ├── tools/              # Xschem, Ngspice, Magic, etc.
     └── pdk/                # Sky130 PDK files
+```
+### Verify Directory Creation
+
+Run the following command:
+
+```bash id="r8f2kp"
+ls ~/eda
+```
+
+Expected output:
+
+```bash id="7n2lwd"
+tools  pdk
 ```
