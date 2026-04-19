@@ -202,3 +202,75 @@ cd ~/eda/tools/ngspice
 This is a **common issue**, especially on fresh Linux installations.
 It does not mean anything is broken—just a missing dependency.
 
+---
+### Configure Ngspice (Critical Step)
+
+Now configure the build with proper options.
+
+### Run Configuration
+
+```bash id="k91s8m"
+cd ~/eda/tools/ngspice/release
+
+../configure \
+--prefix=$HOME/eda/tools/ngspice-install \
+--with-x \
+--enable-xspice \
+--disable-debug \
+--enable-cider \
+--with-readline=yes
+```
+
+---
+
+### Why this step is important
+
+* **--prefix** → Installs Ngspice inside your home directory (avoids system pollution)
+* **--with-x** → Enables GUI support
+* **--enable-xspice** → Required for advanced mixed-signal models
+* **--enable-cider** → Enables device-level simulation (important for analog design)
+* **--disable-debug** → Faster, optimized build
+* **--with-readline** → Enables command-line editing inside Ngspice
+
+---
+
+### Expected Result
+
+* Configuration completes without errors
+* A `Makefile` is generated inside the `release/` folder
+  
+  ---
+### Compile Ngspice
+
+You are now at the build stage.
+
+### Run Compilation
+
+```bash id="q7xk2p"
+make -j4
+```
+
+---
+
+### What this step does
+
+* Compiles the entire Ngspice engine
+* Builds device models (BSIM, etc.)
+* Generates the final simulator binary
+
+---
+
+### Time Estimate
+
+* Typically **5–15 minutes**, depending on your CPU performance
+
+---
+
+### Important Note
+
+* `-j4` uses **4 CPU cores** for faster compilation
+* You can adjust this:
+
+  * `-j2` → slower systems
+  * `-j8` → high-performance CPUs
+
