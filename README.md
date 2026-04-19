@@ -19,3 +19,43 @@ This setup must be performed on a native Linux system. Do not use Windows or WSL
 
 * **Industry relevance:**
   Professional analog/VLSI environments use Linux systems, not Windows.
+## Workspace Setup
+
+Create a structured workspace in your home directory to organize all analog design files.
+
+### Create Project Directory
+
+```bash
+mkdir ~/analog_projects
+cd ~/analog_projects
+
+mkdir circuits
+mkdir layouts
+mkdir models
+mkdir simulations
+```
+
+### Verify Directory Structure
+
+```bash
+pwd
+ls
+```
+
+Expected output:
+
+```
+/home/your-username/analog_projects
+circuits  layouts  models  simulations
+```
+
+---
+
+## Folder Purpose
+
+* **circuits/** → Store Xschem schematic files
+* **layouts/** → Store layout designs (Magic/KLayout)
+* **models/** → Store Sky130 PDK files and custom models
+* **simulations/** → Store Ngspice netlists and output results
+
+---
