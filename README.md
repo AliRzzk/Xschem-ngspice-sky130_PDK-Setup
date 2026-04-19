@@ -59,3 +59,31 @@ circuits  layouts  models  simulations
 * **simulations/** → Store Ngspice netlists and output results
 
 ---
+## EDA Tools & PDK Directories
+
+Create separate directories for tools and PDK to keep your design work isolated from installations.
+
+### Create Directories
+
+```bash
+mkdir -p ~/eda/tools
+mkdir -p ~/eda/pdk
+```
+
+---
+
+### Final Directory Structure
+
+```bash
+/home/your-username/
+│
+├── analog_projects/        # Your design workspace
+│   ├── circuits/
+│   ├── layouts/
+│   ├── models/
+│   └── simulations/
+│
+└── eda/
+    ├── tools/              # Xschem, Ngspice, Magic, etc.
+    └── pdk/                # Sky130 PDK files
+```
