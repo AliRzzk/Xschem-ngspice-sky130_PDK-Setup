@@ -679,5 +679,5 @@ source ~/.bashrc
 ```bash
 xschem
 ```
-
+![Xschem GUI](Xschem_GUI.png)
 Expected: Xschem GUI opens
