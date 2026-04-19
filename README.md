@@ -100,7 +100,7 @@ Expected output:
 ```bash id="7n2lwd"
 tools  pdk
 ```
-## Ngspice Installation
+# Ngspice Installation
 Ngspice is an open-source SPICE simulator used for analog and mixed-signal circuit analysis. It supports transient, AC, DC, and noise simulations and integrates seamlessly with Xschem for schematic-driven simulation.
 ### Clone Ngspice Repository
 
@@ -418,3 +418,266 @@ If you see something like:
 ```
 
 It means your system is **not using the correct version**.
+
+---
+
+### Understanding Ngspice Directories (Avoid Common Confusion)
+
+After installation, you will see **two folders named ngspice**.
+They are completely different and serve different purposes.
+
+### 1️⃣ Source Directory (Not directly usable)
+
+```bash id="s8d2hf"
+~/eda/tools/ngspice/
+```
+
+### What it contains
+
+* Source code (`.c`, `.h`)
+* Build scripts (`autogen.sh`, `configure`)
+* Project files (`Makefile`, etc.)
+
+### Example structure
+
+```bash id="l2m9qp"
+src/
+Makefile
+autogen.sh
+```
+
+### Important
+
+❌ This is **NOT the simulator**
+
+You cannot run:
+
+```bash id="n7x3vb"
+~/eda/tools/ngspice/ngspice
+```
+
+---
+
+### 2️⃣ Installed Binary (This is your actual tool)
+
+```bash id="k4w9zs"
+~/eda/tools/ngspice-install/bin/ngspice
+```
+
+### What it contains
+
+* Compiled executable
+* Ready-to-use simulator
+
+### This is what runs when you type:
+
+```bash id="p9q2tm"
+ngspice
+```
+
+---
+
+### Simple Analogy
+
+```bash id="f3h8dn"
+ngspice/            → factory (where tool is built)
+ngspice-install/    → finished product (what you actually use)
+```
+
+---
+
+### Important Rule (Do not ignore)
+
+✔ Always use:
+
+```bash id="x1v7kc"
+~/eda/tools/ngspice-install/bin/ngspice
+```
+
+❌ Never depend on:
+
+```bash id="q6m4zr"
+~/eda/tools/ngspice/
+```
+
+---
+
+### Why both directories exist
+
+| Directory        | Purpose                                 |
+| ---------------- | --------------------------------------- |
+| ngspice/         | Source code (for building/modifying)    |
+| ngspice-install/ | Final installed tool (for actual usage) |
+
+  Mixing them will lead to errors and confusion.
+  
+# Xschem Installation (Clone Source)
+Xschem is a fast and lightweight schematic capture tool optimized for analog and mixed-signal IC design. It allows hierarchical circuit design and integrates directly with Ngspice for simulation.
+### Clone Xschem Repository
+
+```bash id="x4n8kp"
+cd ~/eda/tools
+git clone https://github.com/StefanSchippers/xschem.git xschem
+```
+
+
+### What this step does
+
+* Downloads Xschem source code from GitHub
+* Creates a new directory:
+
+```bash id="p7d2sm"
+~/eda/tools/xschem/
+```
+
+---
+
+### Verify Clone
+
+```bash id="m3k9we"
+ls ~/eda/tools
+```
+
+Expected output:
+
+```bash id="z8q1vt"
+ngspice   ngspice-install   xschem
+```
+
+---
+### Configure Xschem
+
+Before building Xschem, we need to configure the installation path.
+
+---
+### Run Configuration
+
+```bash id="c9k2qp"
+cd ~/eda/tools/xschem
+./configure --prefix=$HOME/eda/tools/xschem-install
+```
+
+---
+
+### What this step does
+
+* Prepares build files for compilation
+* Sets installation directory to:
+
+```bash id="m4v8sn"
+~/eda/tools/xschem-install
+```
+
+---
+
+## Build & Install Xschem
+
+Now we compile and install Xschem.
+
+---
+
+### Compile Xschem
+
+```bash id="v3k8dp"
+make -j4
+```
+
+---
+
+### What this step does
+
+* Builds the Xschem GUI engine
+* Links required libraries (Tk, Cairo, etc.)
+* Generates the `xschem` executable
+
+---
+
+### Time Estimate
+
+* Around **2–5 minutes** depending on your system
+
+---
+
+## Install Xschem
+
+```bash id="n8q2lm"
+make install
+```
+
+---
+
+### Installation Location
+
+```bash id="w1z7pk"
+~/eda/tools/xschem-install
+```
+
+---
+
+### Important Rules
+
+* ❌ Do NOT use `sudo`
+* ✔ Same clean install method as Ngspice
+* ✔ Keeps system directories untouched
+
+---
+
+### What you get after installation
+
+```bash id="c7r4tx"
+xschem-install/
+├── bin/        # xschem executable
+├── lib/
+└── share/
+```
+
+---
+
+### Key File
+
+```bash id="p4y9hv"
+bin/xschem   ← main executable
+```
+
+---
+
+## Add Xschem to PATH
+
+### Open .bashrc
+
+```bash
+nano ~/.bashrc
+```
+
+---
+
+### Add this line at the end
+
+```bash
+export PATH=$HOME/eda/tools/xschem-install/bin:$PATH
+```
+
+---
+
+### Save and exit
+
+* Press `CTRL + O` → Enter
+* Press `CTRL + X`
+
+---
+
+### Apply changes
+
+```bash
+source ~/.bashrc
+```
+
+---
+
+### Test
+
+```bash
+xschem
+```
+
+Expected: Xschem GUI opens
