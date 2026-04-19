@@ -273,4 +273,76 @@ make -j4
 
   * `-j2` → slower systems
   * `-j8` → high-performance CPUs
+    
+    ---
+    
+### Install Ngspice (Local Installation)
 
+### Run Installation
+
+```bash
+make install
+```
+
+---
+
+### What this step does
+
+* Copies compiled files into your defined install directory
+* Does **not require sudo** (safe local install)
+* Keeps your system clean (no `/usr/local` usage)
+
+---
+
+### Installation Location
+
+```bash
+~/eda/tools/ngspice-install/
+```
+
+---
+
+### Directory Structure Created
+
+```bash
+ngspice-install/
+├── bin/        # Main executable (ngspice)
+├── lib/        # Libraries
+└── share/      # Models, configs, examples
+```
+
+---
+
+### Key File
+
+```bash
+bin/ngspice   ← main executable
+```
+
+---
+
+## Test Ngspice Installation
+
+Run this command:
+
+```bash
+~/eda/tools/ngspice-install/bin/ngspice -v
+```
+
+---
+
+### Expected Output
+
+* Ngspice version (e.g., ngspice-45+)
+* Build information
+* Solver details (e.g., KLU enabled)
+
+---
+
+## What this confirms
+
+* Ngspice is installed correctly
+* Build completed successfully
+* Simulator is ready to use
+
+---
