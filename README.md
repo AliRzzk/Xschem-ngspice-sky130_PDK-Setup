@@ -692,26 +692,9 @@ Now we prepare a clean location for the Sky130 PDK.
 ### Create PDK Directory
 
 ```bash id="n8p2kx"
-mkdir -p ~/eda/pdk/sky130
+mkdir -p ~/eda/pdk
 ```
 
-### Directory Location
-
-```bash id="v3q7ld"
-~/eda/pdk/sky130/
-```
-
-### Verify Directory
-
-```bash id="k4z9mc"
-ls ~/eda/pdk
-```
-
-Expected output:
-
-```bash id="p7m1ws"
-sky130
-```
 
 ## Create .spiceinit File
 
@@ -835,6 +818,7 @@ The `./configure` script allows you to select specific PDKs:
 cd ~/eda/pdk/open_pdks
 ./configure \
 --enable-sky130-pdk \
+--disable-gf180mcu-pdk \
 --prefix=$HOME/eda/pdk/sky130A
 ```
 
@@ -878,6 +862,7 @@ make -j4
 * Compiles Sky130 PDK files
 * Converts raw data into tool-compatible format
 * Prepares libraries for Ngspice, Xschem, Magic
+* In the Open_PDKs flow, running `make -j4` performs a partial build that prepares the essential Sky130 PDK files inside the source directory (`~/eda/pdk/open_pdks/sky130/sky130A`). At this stage, all critical components required for analog simulation—such as ngspice models, device definitions, and Xschem-compatible libraries—are already generated. This means users can immediately start designing and simulating analog circuits without needing a full installation. The partial build significantly reduces system load and avoids unnecessary processing, typically limiting disk usage to roughly 20–30GB instead of growing further. Because of this, users can safely stop after `make -j4` and skip `make install`, especially if they want a lightweight and efficient setup. The `make install` step is only required if a clean, standalone PDK directory (like `~/eda/pdk/sky130A`) is needed, but it is not mandatory for normal analog design workflows.
 
 ---
 
@@ -915,7 +900,8 @@ make install
 
 ---
 
-### Summary
+### Note
+* In Open_PDKs, `make -j4` performs a partial build where the Sky130 PDK is generated inside the source directory (`~/eda/pdk/open_pdks/sky130/sky130A`) and is already usable for tools like ngspice and Xschem. This approach is lightweight, faster, and avoids downloading and processing unnecessary components, which helps save significant disk space (often preventing 20–30GB usage). In contrast, `make install` performs a full build and installation, where the processed PDK is copied to the location specified by `--prefix` (e.g., `~/eda/pdk/sky130A`). This creates a clean, standalone PDK directory but requires much more time, storage, and system resources. The folder `~/eda/pdk/sky130A` does not exist initially—it is only created after a successful `make install`. Since the partial build already provides a functional setup for analog simulation, the full installation step is optional and usually skipped unless a clean, separate PDK deployment is specifically required.
+---
 
-* `open_pdks/` → build source
-* `sky130A/` → final usable PDK
+Congratulations! You have successfully set up the complete analog design environment, including Xschem, ngspice, and the SKY130 PDK. Your tools are properly configured, the models are correctly linked, and the simulation flow is working as expected. You are now ready to begin designing and simulating analog circuits using SKY130 technology.
