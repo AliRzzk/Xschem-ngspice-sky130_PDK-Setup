@@ -1062,7 +1062,7 @@ Add this line at the top of your simulation file:
 ## How to Run Simulation in Xschem
 ![Xschem GUI](plots.png)
 
-Follow these steps to simulate your circuit and verify your setup.
+### Follow these steps to simulate your circuit and verify your setup.
 
 ---
 
