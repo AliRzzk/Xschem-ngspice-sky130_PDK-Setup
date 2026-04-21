@@ -902,6 +902,264 @@ make install
 
 ### Note
 * In Open_PDKs, `make -j4` performs a partial build where the Sky130 PDK is generated inside the source directory (`~/eda/pdk/open_pdks/sky130/sky130A`) and is already usable for tools like ngspice and Xschem. This approach is lightweight, faster, and avoids downloading and processing unnecessary components, which helps save significant disk space (often preventing 20–30GB usage). In contrast, `make install` performs a full build and installation, where the processed PDK is copied to the location specified by `--prefix` (e.g., `~/eda/pdk/sky130A`). This creates a clean, standalone PDK directory but requires much more time, storage, and system resources. The folder `~/eda/pdk/sky130A` does not exist initially—it is only created after a successful `make install`. Since the partial build already provides a functional setup for analog simulation, the full installation step is optional and usually skipped unless a clean, separate PDK deployment is specifically required.
+
+  
 ---
 
 Congratulations! You have successfully set up the complete analog design environment, including Xschem, ngspice, and the SKY130 PDK. Your tools are properly configured, the models are correctly linked, and the simulation flow is working as expected. You are now ready to begin designing and simulating analog circuits using SKY130 technology.
+---
+
+
+# Example
+  Now we will test Everything.
+  * First Understand The paths
+## Xschem Default Device Library
+
+Xschem comes with a built-in library that contains all the basic components required to create schematics.
+
+---
+
+### Library Location
+
+```bash
+~/eda/tools/xschem-install/share/xschem/xschem_library/devices
+```
+
+---
+
+### What you will find here
+
+This directory includes commonly used schematic components such as:
+
+* Voltage sources
+* Current sources
+* Ground (GND)
+* Passive components (resistors, capacitors, etc.)
+* Basic analog building blocks
+
+---
+
+### Usage in Xschem
+
+When you open Xschem:
+
+* Press **`Insert`** or use the **tool menu>insert symbol**
+* Select components from the default library
+
+---
+
+## Sky130 PDK Device Library (MOSFETs)
+
+This is the location of Sky130 technology devices used for real analog design.
+
+---
+
+### PDK Library Path
+
+```bash id="k2p8sm"
+~/eda/pdk/open_pdks/sky130/sky130A/libs.tech/xschem/sky130_fd_pr
+```
+
+---
+
+### What you will find here
+
+This directory contains Sky130 device symbols such as:
+
+* **nfet_01v8** → NMOS transistor (1.8V device)
+* **pfet_01v8** → PMOS transistor (1.8V device)
+* Other process-specific components
+
+---
+
+### What these are
+
+* These are **actual CMOS devices** from Sky130 technology
+* Used for **real circuit design**, not just basic schematic symbols
+
+---
+
+### Why this is important
+
+* Default Xschem library → generic components
+* Sky130 PDK library → **technology-accurate devices**
+
+👉 For analog/VLSI design, always use **PDK devices**, not generic ones
+
+---
+
+### Usage in Xschem
+
+* Open tool>insert symbol
+* Navigate to Sky130 library
+* Select devices like `nfet_01v8`, `pfet_01v8`
+
+---
+## Using .lib (Including Sky130 Models in Simulation)
+
+To simulate circuits using Sky130 devices, you must include the PDK model file using a `.lib` statement.
+
+---
+
+### Why `.lib` is required
+
+* Ngspice needs **device models** to understand transistor behavior
+* Without `.lib`, simulation will fail or give incorrect results
+* It links your schematic to **real Sky130 physics (BSIM models)**
+
+---
+
+### Model File Path
+
+```bash id="k3p9xn"
+~/eda/pdk/open_pdks/sky130/sky130A/libs.tech/ngspice/sky130.lib.spice
+```
+
+---
+
+### How to use in testbench / netlist
+
+Add this line at the top of your simulation file:
+
+```spice id="v8m2qp"
+.lib ~/eda/pdk/open_pdks/sky130/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+```
+
+---
+
+### What this line means
+
+* `.lib` → includes model library
+* `sky130.lib.spice` → main Sky130 model file
+* `tt` → **process corner (Typical-Typical)**
+
+---
+
+### Common corners
+
+| Corner | Meaning                    |
+| ------ | -------------------------- |
+| tt     | Typical NMOS, Typical PMOS |
+| ff     | Fast NMOS, Fast PMOS       |
+| ss     | Slow NMOS, Slow PMOS       |
+
+---
+
+### Important Note
+
+* This line must be present in every simulation
+* Without it, MOSFETs like `nfet_01v8` will not work
+
+---
+
+### Key Understanding
+
+* Xschem → draws schematic
+* Ngspice → runs simulation
+* `.lib` → connects schematic to real device models
+---
+
+## How to Run Simulation in Xschem
+
+Follow these steps to simulate your circuit and verify your setup.
+
+---
+
+### 1. Add components
+
+* Open Xschem
+* Use the **default device library**
+* Place:
+
+  * NMOS (`nfet_01v8`)
+  * Voltage sources (`VGS`, `VDS`)
+  * Ground
+
+---
+
+### 2. Add testbench (S1 block)
+
+* Insert a **code block (S1)**
+* Paste your simulation commands (`.lib`, `.dc`, etc.)
+* ```
+  .lib ~/eda/pdk/open_pdks/sky130/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+  .dc VDS 0 1.8 0.01 VGS 0 1.8 0.6
+  .save all
+  .end
+     ```
+
+---
+
+### 3. Check netlist
+
+* Go to:
+  **Simulation → Show Netlist**
+* Ensure:
+
+  * Correct device names
+  * `.lib` path is correct
+
+---
+
+### 4. Run simulation
+
+* Click:
+  **Simulation**
+
+* A new **xterm window** will open
+
+---
+
+### 5. View available signals
+
+In the xterm, type:
+
+```bash id="j2k8xp"
+display
+```
+
+This shows all available simulation vectors (currents, voltages).
+
+---
+
+### 6. Plot results
+
+Use commands like:
+
+```bash id="x8m3qa"
+First see the available vectors and then use plot command accordigly ,names maybe differ system to system
+plot -I(VDS)
+plot id vs Vgs
+plot id vs Vds
+plot V(D)
+```
+
+or based on sweep:
+
+```bash id="p9v2kc"
+plot -I(VDS) vs vds
+```
+
+---
+
+### 7. What you should see
+
+* Graph windows with curves (Id vs Vds, etc.)
+* Multiple curves for different Vgs (if stepped)
+
+---
+
+## Final Check
+
+If plots appear correctly (like shown in example):
+
+✅ Ngspice is working
+✅ Xschem integration is correct
+✅ Sky130 models are properly linked
+
+---
+
+## Conclusion
+
+Your analog simulation environment is now fully functional.
+You can proceed to build and simulate real circuits for your projects.
